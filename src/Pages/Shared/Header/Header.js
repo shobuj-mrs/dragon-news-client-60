@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Image } from 'react-bootstrap';
+import { Button, Image } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -9,7 +9,12 @@ import { AuthContext } from '../../../context/AuthProvider/AuthProvider';
 import LeftSideNav from '../LeftSideNav/LeftSideNav';
 
 const Header = () => {
-    const { user } = useContext(AuthContext);
+    const { user, logOut } = useContext(AuthContext);
+    const handleLogout = () => {
+        logOut()
+            .then(() => { })
+            .catch(error => console.error(error))
+    }
     return (
         <Navbar collapseOnSelect className='mb-4' expand="lg" bg="light" variant="light">
             <Container>
@@ -32,12 +37,32 @@ const Header = () => {
                         </NavDropdown> */}
                     </Nav>
                     <Nav>
-                        <Nav.Link eventKey={2} href="#memes"> {user?.photoURL ?
-                            <Image roundedCircle src={user?.photoURL} style={{ height: '30px' }}></Image>
-                            :
-                            <FaUser></FaUser>
-                        } </Nav.Link>
-                        <Nav.Link href="#deets" >{user?.displayName}</Nav.Link>
+
+
+                        <Nav.Link href="#deets" >
+                            {
+                                user?.uid ?
+                                    <>
+                                        <span> {user?.displayName}</span>
+                                        <Button onClick={handleLogout} variant="light" className='ms-3 mt-0 border-none'>Log Out</Button>
+                                    </>
+                                    :
+                                    <>
+                                        <Link className=' text-decoration-none ms-3' to='/login'>Login</Link>
+                                        <Link className=' text-decoration-none ms-3' to='/register'>Register</Link>
+                                    </>
+                            }
+
+                        </Nav.Link>
+
+                        <Nav.Link eventKey={2} href="#memes">
+                            {user?.photoURL ?
+                                <Image
+                                    roundedCircle src={user?.photoURL} style={{ height: '30px' }}
+                                ></Image>
+                                :
+                                <FaUser></FaUser>
+                            } </Nav.Link>
 
                     </Nav>
                     <div className='d-lg-none'>
